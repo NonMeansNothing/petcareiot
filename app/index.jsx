@@ -1,25 +1,39 @@
-import React from 'react';
-import { Text, View, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, ImageBackground } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React, { useEffect, useState } from 'react';
+import { Text, View, StyleSheet, StatusBar, SafeAreaView, TouchableOpacity, ImageBackground } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-
-
-function getNumberOfTemp() {
-  return Math.floor(Math.random() * 10);
-}
-
-function getHumidity() {
-  return Math.floor(Math.random() * 100);
-}
-
-function getMedicinePercentage() {
-  return Math.floor(Math.random() * 100);
-}
+import { ref, onValue, off } from 'firebase/database';
+import { database } from '../components/firebaseConfig';
 
 export default function Home() {
-  const NumberOfTemp = getNumberOfTemp();
-  const Humidity = getHumidity();
-  const MedicinePercentage = getMedicinePercentage();
+
+  const [temperature, setTemperature] = useState(0);
+  const [humidity, setHumidity] = useState(0);
+  const [medicine, setMedicine] = useState(0);
+
+  useEffect(() => {
+    const temperatureRef = ref(database, 'Temperature');
+    const humidityRef = ref(database, 'Humidity');
+    const medicineRef = ref(database, 'Medicine');
+
+    const onTemperatureChange = onValue(temperatureRef, (snapshot) => {
+      setTemperature(snapshot.val());
+    });
+
+    const onHumidityChange = onValue(humidityRef, (snapshot) => {
+      setHumidity(snapshot.val());
+    });
+
+    const onMedicineChange = onValue(medicineRef, (snapshot) => {
+      setMedicine(snapshot.val());
+    });
+
+    return () => {
+      off(temperatureRef, 'value', onTemperatureChange);
+      off(humidityRef, 'value', onHumidityChange);
+      off(medicineRef, 'value', onMedicineChange);
+    };
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,7 +45,7 @@ export default function Home() {
                 <Text style={styles.text}>
                   Temperature:
                 </Text>
-                <Text style={styles.textshowb}>{NumberOfTemp} c°</Text>
+                <Text style={styles.textshowb}>{temperature} c°</Text>
               </View>
             </ImageBackground>
           </View>
@@ -48,14 +62,14 @@ export default function Home() {
                   <AnimatedCircularProgress
                     size={60}
                     width={10}
-                    fill={Humidity}
+                    fill={humidity}
                     tintColor="#00e0ff"
                     backgroundColor="#3d5875"
                     rotation={180}
                     lineCap="round"
                   />
                   <Text style={styles.textshow}>
-                    {Humidity} % s
+                    {humidity} % s
                   </Text>
                 </View>
               </View>
@@ -72,14 +86,14 @@ export default function Home() {
                   <AnimatedCircularProgress
                     size={60}
                     width={10}
-                    fill={MedicinePercentage}
+                    fill={medicine}
                     tintColor="#00e0ff"
                     backgroundColor="#3d5875"
                     rotation={180}
                     lineCap="round"
                   />
                   <Text style={styles.textshow}>
-                    {MedicinePercentage} % s
+                    {medicine} % s
                   </Text>
                 </View>
               </View>

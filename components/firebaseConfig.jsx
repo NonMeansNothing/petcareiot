@@ -1,21 +1,21 @@
 // Import the functions you need from the SDKs you need
 // firebaseConfig.js
-import firebase from '@react-native-firebase/app';
-import '@react-native-firebase/database';
+
+import { initializeApp } from 'firebase/app';
+import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBIvgCYNGCeWbG4917_ThPjOSGAiwc_d1U",
-  authDomain: "petshop-1a492.firebaseapp.com",
-  databaseURL: "https://petshop-1a492-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "petshop-1a492",
-  storageBucket: "petshop-1a492.appspot.com",
-  messagingSenderId: "860895950158",
-  appId: "1:860895950158:web:983148c45e2a9d45ab5a1f",
-  measurementId: "G-6XN181YJJD"
+  apiKey: "AIzaSyDVHAmiAffFK6Ls-noR24JO4gRX2bPnV0U",
+  authDomain: "test-85338.firebaseapp.com",
+  databaseURL: "https://test-85338-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "test-85338",
+  storageBucket: "test-85338.appspot.com",
+  messagingSenderId: "442138018620",
+  appId: "1:442138018620:web:8c1e0e3a1dc2a98c821439",
+  measurementId: "G-5XN2BLCGZR"
 };
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
 
-export default firebase;
+export { app, database };
