@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, StatusBar, SafeAreaView, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ref, update } from 'firebase/database';
+import  { database }  from '../components/firebaseConfig';
 
 export default function Devices() {
   const [lightTimeSetting, setLightTimeSetting] = useState("");
@@ -34,10 +36,16 @@ export default function Devices() {
       case 'light':
         timeInSeconds = parseInt(lightTimeSetting) * 60;
         setLightTimeLeft(timeInSeconds);
+        //ส่งข้อมูลไปยัง database โหนด lightTimeSetting
+        const lightTimeRef = ref(database);
+        update(lightTimeRef, {lightTimeSetting});
         break;
       case 'heater':
         timeInSeconds = parseInt(heaterTimeSetting) * 60;
         setHeaterTimeLeft(timeInSeconds);
+        //ส่งข้อมูลไปยัง database โหนด heaterTimeSetting
+        const heaterTimeRef = ref(database);
+        update(heaterTimeRef, {heaterTimeSetting});
         break;
       default:
         return;
@@ -49,9 +57,15 @@ export default function Devices() {
     switch (type) {
       case 'gas':
         setGasMilligram(gasMilligramSetting);
+        //ส่งข้อมูลไปยัง database โหนด gasMilligramSetting
+        const gasMilligramRef = ref(database);
+        update(gasMilligramRef, {gasMilligramSetting});
         break;
       case 'liquid':
         setLiquidMilligram(liquidMilligramSetting);
+        //ส่งข้อมูลไปยัง database โหนด liquidMilligramSetting
+        const liquidMilligramRef = ref(database);
+        update(liquidMilligramRef, {liquidMilligramSetting});
         break;
       default:
         return;
